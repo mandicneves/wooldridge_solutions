@@ -191,10 +191,30 @@ A diferença percentual entre quem fez o treinamento e quem não fez é de `r ro
 ### (iii) A variável `unem78` é um indicador de um homem estar desempregado ou não em 1978. Que proporção dos homens que receberam treinamento profissional está desempregada? E entre aqueles que não receberam treinamento? Comente sobre a diferença.
 
 ```{r}
-
+# criando dados com fatores e rotulos
+treino <- factor(jtrain2$train, labels = c("sem treino", "com treino"))
+unem <- factor(jtrain2$unem78, labels = c("empregado", "desempregado"))
+# tabela que relaciona desemprego e treinamento
+( tabela <- table(unem, treino, dnn = c("DESEMPREGO", "TREINAMENTO")) ) 
+# porcentagem dos homens desempregados que receberam e nao receberam treinamento
+round(prop.table(tabela, margin = 2)[2,] * 100, 2)
 ```
 
+### (iv) A partir dos itens (ii) e (iii), o programa de treinamento profissional parece ter sido efetivo? O que tornaria suas conclusões mais convincentes?
 
+Os efeitos encontrados pela diferença do ganhos e pela taxa de desemprego sugerem que existe o treinamento impacta positivamente os trabalhadores.
+
+## C5 Os dados em `FERTIL2` foram coletados de mulheres que viviam na República de Botsuana em 1988. A variável `children` refere-se ao número de filhos vivos. A variável `eletric` é um indicador binário igual a um se a residência da mulher tiver eletricidade, e zero se não tiver.
+
+```{r}
+data("fertil2")
+```
+
+### (i) Encontre os menores e os maiores valores de `children` da amostra. Qual é a média de `children`?
+
+```{r}
+summary(fertil2$children)[c("Min.", "Max.", "Mean")]
+```
 
 
 
