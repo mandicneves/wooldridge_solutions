@@ -1,0 +1,26 @@
+---
+output: pdf_document
+---
+
+# Exercícios em computador
+
+## C1 Use os dados do arquivo `WAGE1` para este exercício.
+
+```{r dados, message = FALSE}
+library(wooldridge)
+data("wage1")
+```
+
+### (i) Encontre o nível de escolaridade médio da amostra. Quais são os menores e os maiores valores de anos de educação?
+
+```{r}
+medio <- mean(wage1$educ)
+menor <- min(wage1$educ)
+maior <- max(wage1$educ)
+```
+
+- Nível de escolaridade médio: `r round(medio)`
+
+- Menor valor de educação: `r menor`
+
+- Maior valor de educação: `r maior`
