@@ -52,7 +52,162 @@ names(tabela) <- c("Homem", "Mulher")
 tabela
 ```
 
-## C2
+## C2 Use os dados do arquivo BWGHT para responder a essas questões.
+
+```{r}
+data("bwght")
+```
+
+### (i) Quantas mulheres existem na amostra e quantas relataram fumar durante a gravidez?
+
+```{r}
+qtde_mulheres <- nrow(bwght)
+qtde_nao_fumantes <- sum(bwght$cigs > 0)
+```
+
+Existem `r qtde_mulheres` na amostra e `r qtde_nao_fumantes` relataram fumar durante a gravidez.
+
+### (ii) Qual é o número médio de cigarros consumidos por dia? A média é uma boa medida da mulher “típica” neste caso? Explique.
+
+```{r}
+# media arredondada
+round(mean(bwght$cigs))
+```
+
+O número médio de cigarros consumidos por dia não é condizente com a amostra. Cerca de 85% das mulheres não fumaram durante a gravidez. Isso ocorre pois o valor atribuído quando a mulher não é fumante é 0.
+
+### (iii) Entre mulheres que fumaram durante a gravidez, qual é o número médio de cigarros consumidos por dia? De que forma isso se compara com sua resposta ao item (ii) e por quê?
+
+```{r}
+# media
+mean(subset(bwght, cigs > 0)$cigs)
+```
+
+Esse número é muito maior do que no caso anterior, porque excluímos 85% das observações da amostra que eram 0.
+
+### (iv) Encontre a média de `fatheduc` na amostra. Por que somente 1.192 observações são usadas para calcular essa média?
+
+```{r}
+# subconjunto da amostra que contem as observacoes que possuem NA na variavel fatheduc
+nrow(subset(bwght, is.na(fatheduc)))
+# media
+mean(bwght$fatheduc, na.rm = TRUE)
+```
+
+Parte das observações na variável de educação dos pais possui `NA`, ou seja, não foi possível obter essa informação no momento da captura dos dados
+
+### (v) Relate a renda média familiar e seu desvio padrão em dólares.
+
+```{r}
+# media
+mean(bwght$faminc)
+# desvio-padrao
+sd(bwght$faminc)
+```
+
+## C3 Os dados existentes no arquivo `MEAP01` são do estado de Michigan no ano de 2001. Use estes dados para responder às seguintes questões.
+
+```{r}
+data("meap01")
+```
+
+### (i) Encontre os maiores e os menores valores de `math4`. Essa variação faz sentido? Explique.
+
+```{r}
+# valor maximo
+max(meap01$math4)
+# valor minimo
+min(meap01$math4)
+```
+
+### (ii) Quantas escolas têm uma taxa de aprovação perfeita no teste de matemática? Que porcentagem da amostra total isso representa?
+
+```{r}
+# aprovacao perfeita  = 100
+round(100 * mean(meap01$math4 == 100), 2) # porcentagem arredondada
+```
+
+### (iii) Quantas escolas têm taxas de aprovação em matemática de exatamente 50%?
+
+```{r}
+# quantidade escolas com 50% de aprovacao em matematica
+sum(meap01$math4 == 50)
+```
+
+### (iv) Compare as taxas médias de aprovação em matemática e leitura. Qual teste tem a aprovação mais difícil?
+
+```{r}
+apply(meap01[, c("math4", "read4")], FUN = mean, MARGIN = 2)
+```
+
+### (v) Encontre a correlação entre `math4` e `read4`. O que você conclui?
+
+```{r}
+cor(meap01$math4, meap01$read4)
+```
+
+As duas variáveis são positivamente e fortemente correlacionadas.
+
+#### (vi) A variável `exppp` são os gastos por aluno. Encontre o `exppp` médio e seu desvio padrão. Você diria que há uma variação ampla nos gastos por aluno?
+
+```{r}
+# gastos por aluno medio
+mean(meap01$exppp)
+# desvio-padrao
+sd(meap01$exppp)
+```
+
+O desvio-padrão mostra que existe uma ampla variação no gasto médio por aluno.
+
+### (vii) Suponha que a Escola A gaste US\$ 6.000 por estudante e a Escola B gaste US\$ 5.500 por aluno. Com que percentual os gastos da Escola A superam os da Escola B? Compare isso a 100· [log(6.000) – log(5.500)], que é a diferença percentual aproximada baseada na diferença dos logs naturais. Ver Seção A.4, no Apêndice A (Disponível no site da Cengage.)
+
+```{r}
+round(((log(6000) - log(5500)) * 100), 2)
+```
+
+## C4 Os dados contidos em `JTRAIN2` são provenientes de um experimento de capacitação profissional direcionado para homens de baixa renda durante 1976-1977; ver Lalonde (1986).
+
+```{r}
+data("jtrain2") # carregando base de dados do pacote do wooldridge
+```
+
+### (i) Use a variável indicadora `train` para determinar a proporção de homens que recebeu treinamento profissional.
+
+```{r}
+round((mean(jtrain2$train) * 100), 1)
+```
+
+### (ii) A variável `re78` são os ganhos de 1978, medidos em milhares de dólares de 1982. Encontre as médias de `re78` para a amostra de homens que recebeu capacitação profissional e para aquela que não recebeu. A diferença é economicamente grande?
+
+```{r}
+# sem treinamento
+(sem_treino <- mean(subset(jtrain2, train == 0)$re78))
+# com treinamento
+(com_treino <- mean(subset(jtrain2, train == 1)$re78))
+```
+
+A diferença percentual entre quem fez o treinamento e quem não fez é de `r round (100 * (log(com_treino) - log(sem_treino)), 1)`\%. 
+
+### (iii) A variável `unem78` é um indicador de um homem estar desempregado ou não em 1978. Que proporção dos homens que receberam treinamento profissional está desempregada? E entre aqueles que não receberam treinamento? Comente sobre a diferença.
+
+```{r}
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
