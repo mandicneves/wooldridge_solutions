@@ -24,3 +24,53 @@ maior <- max(wage1$educ)
 - Menor valor de educação: `r menor`
 
 - Maior valor de educação: `r maior`
+
+### (ii) Encontre o salário-hora médio da amostra. Ele parece alto ou baixo? 
+
+```{r}
+salario_medio <- (mean(wage1$wage))
+```
+
+### (iii) Os dados salariais são reportados em dólares de 1976. Pesquisando na Internet ou em uma fonte impressa, encontre o Índice de Preços do Consumidor (IPC) para os anos de 1976 e 2013.
+
+Ano | IPC
+--- | ---
+1976 | 56.9
+2013 | 233.0
+
+### (iv) Use os valores do IPC da parte (iii) para encontrar o salário-hora médio em dólares de 2013. Agora o salário-hora médio parece razoável?
+
+```{r}
+salario_medio * (233 / 56.9)
+```
+
+### (v) Quantas mulheres existem na amostra? E quantos homens?
+
+```{r}
+tabela <- table(wage1$female)
+names(tabela) <- c("Homem", "Mulher")
+tabela
+```
+
+## C2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
