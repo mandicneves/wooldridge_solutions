@@ -216,10 +216,91 @@ data("fertil2")
 summary(fertil2$children)[c("Min.", "Max.", "Mean")]
 ```
 
+### (ii) Qual é a porcentagem de mulheres que têm eletricidade em casa?
+
+```{r}
+round(mean(fertil2$electric, na.rm = TRUE) * 100, 2)
+```
+
+### (iii) Calcule a média de `children` para aquelas sem eletricidade e faça o mesmo para as que têm eletricidade. Comente o que descobriu.
+
+```{r}
+mean(subset(fertil2, electric == 0)$children) # com eletricidade
+mean(subset(fertil2, electric == 1)$children) # sem eletricidade
+```
+
+A média de filhos para mulheres sem eletricidade é maior.
+
+### (iv) A partir do item (iii), você pode deduzir que ter eletricidade “causa” mulheres com menos filhos? Explique.
+
+Não. A partir da observação constatada acima, não temos o suficiente para fazer esta afirmação.
+
+## C6 Use os dados contidos no arquivo `COUNTYMURDERS` para responder a essas questões. Use somente o ano de 1996. A variável `murders` é o número de assassinatos relatados no condado. A variável `execs` é o número de execuções de pessoas sentenciadas à morte ocorridas naquele determinado condado. A maioria dos estados norte-americanos tem pena de morte, mas alguns deles não. 
+
+```{r}
+data("countymurders") # carregando base de dados
+df <- subset(countymurders, year == 1996) # filtrando apenas para o ano de 1996
+```
+
+### (i) Quantos condados são listados no conjunto de dados? Destes, quantos tiveram zero assassinato? Qual é a porcentagem de condados que teve zero execução? (Lembre-se, use somente os dados de 1996.)
+
+```{r, message = FALSE}
+# quantidade de condados na base de dados
+qtde_condados <- length(
+  unique(
+    df$countyid))
+# porcentagem de condados em 1996 em nao houve execucao
+pct <- round(100 * length(df$countyid[df$execs == 0]) / qtde_condados, 1)
+```
+
+Para o ano de 1996, existem `r qtde_condados` condados. Em `r pct` destes condados, não houve execução.
+
+### (ii) Qual é o maior número de assassinatos? Qual é o maior número de execuções? Por que o número médio de execuções é tão pequeno?
+
+```{r}
+max(df$murders)
+max(df$execs)
+```
+
+### (iii) Calcule o coeficiente de correlação entre `murders` e `execs` e descreva o que encontrar.
+
+```{r}
+cor(df$murders, df$execs)
+```
+
+Existe uma relação positiva entre `murders` e `execs`, contudo essa correlação não é forte.
+
+### (iv) Você deve ter encontrado uma correlação positiva no item (iii). Você acha que mais execuções causam mais assassinatos? O que poderia explicar a correlação positiva?
 
 
+## C7 O conjunto de dados do arquivo `ALCOHOL` contém informações sobre uma amostra de homens dos Estados Unidos. Duas variáveis principais são o status de emprego autorrelatado e o abuso de álcool (ao lado de muitas outras variáveis). As variáveis `employ` e `abuse` são ambas binárias, ou indicadores: elas só recebem os valores zero e um. 
 
+```{r}
+data("alcohol")
+```
 
+### (i) Qual é a porcentagem de homens da amostra que relatou abuso de álcool? Qual é a taxa de emprego?
+
+```{r}
+round(100 * mean(alcohol$abuse == 1), 1) # pct relatou abuso de alcool
+round(100 * mean(alcohol$employ == 1), 1) # pct empregados
+```
+
+### (ii) Considere o grupo de homens que abusa de álcool. Qual é a taxa de emprego desse grupo?
+
+```{r}
+mean(alcohol[(alcohol$abuse == 1), ]$employ)
+```
+
+### (iii) Qual é a taxa de emprego do grupo de homens que não abusam de álcool? 
+
+```{r}
+mean(alcohol[(alcohol$abuse == 0), ]$employ)
+```
+
+### (iv) Discuta a diferença de suas respostas aos itens (ii) e (iii). Isso permite que você conclua que o abuso de álcool causa desemprego?
+
+A taxa de emprego para homens que relataram abuso de álcool, é menor do aqueles que não relataram abuso. Contudo, isso não implica, necessariamente, em causalidade.
 
 
 
