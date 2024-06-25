@@ -1,0 +1,20 @@
+---
+output: pdf_document
+---
+
+# Exercícios em computador
+
+## C1 Os dados do arquivo `401K` são um subconjunto de dados analisados por Papke (1995) para estudar a relação entre a participação em um plano de pensão `401k` e a generosidade do plano. A variável `prate` é a porcentagem de trabalhadores aptos e com uma conta ativa; esta é a variável que gostaríamos de explicar. A medida da generosidade é a taxa de contribuição do plano, `mrate.` Esta variável mostra a quantia média com que a empresa contribui para o fundo trabalhista a cada US$ 1 de contribuição do trabalhador. Por exemplo, se a `mrate` = 0,50, então uma contribuição de US$ 1 do trabalhador corresponde a uma contribuição de US$ 0,50 da empresa.
+
+```{r dados, message = FALSE}
+library(wooldridge)
+data("k401k")
+```
+
+### (i) Encontre a taxa de participação e a taxa de contribuição médias na amostra de planos.
+
+```{r}
+mean(k401k$prate) # media taxa de participacao
+mean(k401k$mrate) # media taxa de contribuicao
+```
+
