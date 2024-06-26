@@ -90,10 +90,67 @@ $$
 Um aumento de um ano a mais como CEO gera um aumento no salário em 0,97%.
 
 
+## C3 Use os dados do arquivo `SLEEP75`, de Biddle e Hamermesh (1990), para estudar se há uma compensação entre o tempo gasto dormindo por semana e o tempo gasto em um trabalho remunerado. Podemos usar qualquer variável como a variável dependente. Para materializar, estime o modelo
+
+$$
+sleep = \beta_0 + \beta_1totwrk + u,
+$$
+
+em que `sleep` são os minutos dormidos à noite por semana e `totwrk` é o total de minutos trabalhados durante a semana.
+
+```{r}
+library(wooldridge)
+data("sleep75")
+```
+
+```{r}
+model <- lm(sleep ~ totwrk, data = sleep75) # estimando modelo
+summary(model) # resultados
+```
+
+### (i) Registre seus resultados em uma equação junto com o número de observações e o $R^2$. O que o intercepto desta equação significa?
+
+$$
+\begin{matrix}
+  \widehat {sleep} = 3586, 38 - 0,15 * totwrk \\
+  n = 706, \qquad R^2 = 0,1033
+\end{matrix}
+$$
+
+O intercepto da equação indica os minutos dormidos por semana quando a quantidade de minutos trabalhados na semana, `totwrk` for igual a zero.
+
+### (ii) Se `totwrk` aumentar 2 horas, quanto você estima que `sleep` cairá? Você acha que este é um efeito grande?
+
+```{r}
+model$coefficients[2] * 2 * 60 # totwrk é medido em horas, portanto precisa fazer a conversão
+```
+
+Um aumento de duas horas de trabalho na semana, reduzirá em 18 minutos dormidos durante a semana. Isso não parece ser um valor muito alto.
+
+## C4 Use os dados do arquivo `WAGE2` para estimar uma regressão simples que explique o salário mensal (`wage`) em termos da pontuação do QI (`IQ`).
+
+```{r}
+library(wooldridge)
+data("wage2")
+```
+
+### (i) Encontre o salário médio e o `IQ` médio da amostra. Qual é o desvio padrão amostral do `IQ`? (Pontuações de `IQ` são padronizadas, por isso, a média na população é 100 com um desvio padrão igual a 15.)
+
+```{r}
+mean(wage2$wage) # salário médio
+mean(wage2$IQ) # QI médio
+sd(wage2$IQ) # desvio-padrão de QI
+```
+
+### (ii) Estime um modelo de regressão simples em que um aumento de um ponto em `IQ` altere `wage` em uma quantia constante de dólares. Use este modelo para encontrar o aumento previsto do salário para o caso de um acréscimo de 15 pontos de `IQ.` O `IQ` explica a maior parte da variação em `wage`?
+
+```{r}
+model <- lm(wage ~ IQ, data = wage2) # estimando o modelo
+summary(model) # resultados
+```
 
 
-
-
+### (iii) Agora, estime um modelo em que cada acréscimo de um ponto em `IQ` tenha o mesmo efeito percentual em `wage.` Se `IQ` aumentar 15 pontos, qual será o aumento percentual previsto aproximado em `wage`?
 
 
 
