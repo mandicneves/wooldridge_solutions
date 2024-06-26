@@ -18,3 +18,92 @@ mean(k401k$prate) # media taxa de participacao
 mean(k401k$mrate) # media taxa de contribuicao
 ```
 
+### (ii) Agora, estime a equação de regressão simples, e relate os resultados ao lado do tamanho da amostra e do R-quadrado.
+
+$$ \widehat {prate}  = \hat \beta_0 + \hat \beta_1 mrate$$
+
+```{r}
+model <- lm(prate ~ mrate, data = k401k)
+summary(model) # resultados
+```
+
+
+### (iii) Interprete o intercepto de sua equação. Interprete o coeficiente de `mrate`.
+
+O intercepto $\beta_0 = 83,07$ indica o valor esperado ou estimado de `prate` quando `mrate` é igual a zero. Já o coeficiente $\beta_1$ indica que existe uma relação positiva entre `mrate` e `prate`, e que também a cada unidade acrescidade de `mrate` estima-se um aumento em `prate` de 5,86 unidades.
+
+### (iv) Encontre a prate prevista quando `mrate` = 3,5. Esta é uma previsão razoável? Explique o que está ocorrendo aqui.
+
+$$
+\widehat{prate} = 83,07 + 5,86 * 3,5
+$$
+
+```{r}
+83.07 + (5.86 * 3.5)
+```
+
+Este valor é impossível, dado que a taxa máxima de participação é de 100%. Isto ilustra que, especialmente quando as variáveis dependentes são limitadas, um modelo de regressão simples pode fornecer previsões estranhas para valores extremos da variável independente. Na amostra, existem apenas `r length(k401k$mrate[k401k$mrate >= 3.5])` valores de `mrate` maiores ou iguais a 3,5.
+
+### (v) Quanto da variação da prate é explicada pela `mrate`? Na sua opinião, isso é bastante?
+
+Aproximadamento 7,4% da variação de `prate` é explicada por `mrate`. Este não é um valor alto, indicando que provavelmente existem outros fatores que influenciam a taxa de participação.
+
+
+## C2 O conjunto de dados do arquivo `CEOSAL2` contém informações sobre CEOs de corporações norte-americanas. A variável `salary` é a compensação anual, em milhares de dólares, e `ceoten` é o número prévio de anos como CEO da empresa.
+
+```{r}
+library(wooldridge)
+data("ceosal2")
+```
+
+
+### (i) Encontre o salário médio e a permanência média na amostra.
+
+```{r}
+mean(ceosal2$salary) # salario medio
+mean(ceosal2$ceoten) # permanencia media
+```
+
+
+### (ii) Quantos CEOs estão em seu primeiro ano no cargo (isto é, `ceoten` = 0)? Qual é a permanência mais longa como CEO?
+
+```{r}
+max(subset(ceosal2, ceoten == 0)$comten) # permanencia mais longa quando ceoten igual a 0
+```
+
+### (iii) Estime o modelo de regressão simples e registre seus resultados da forma usual. Qual é o aumento percentual previsto (aproximado) no salário quando se tem um ano a mais como CEO?
+
+$$log(salary) = \beta_0 + \beta_0ceoten + \mu$$
+
+```{r}
+model <- lm(lsalary ~ ceoten, data = ceosal2) # estimando modelo
+summary(model) # resultados
+```
+
+$$ 
+\begin{matrix} 
+  \widehat {log(salary)} = 6,5055 + 0,0097 * ceoten \\
+  n = 177, \qquad R^2 = 0,01316 
+\end{matrix}
+$$
+
+Um aumento de um ano a mais como CEO gera um aumento no salário em 0,97%.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
