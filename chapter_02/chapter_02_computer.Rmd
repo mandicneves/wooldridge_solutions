@@ -149,13 +149,30 @@ model <- lm(wage ~ IQ, data = wage2) # estimando o modelo
 summary(model) # resultados
 ```
 
+$$
+\begin{matrix}
+  \widehat {salary} = 116,9 + 8,30(IQ) \\
+  n = 935, \qquad R^2 = 0,09554
+\end{matrix}
+$$
+
+Um aumento de 15 no `IQ` aumenta o salário mensal previsto em $8,30*(15) = \$ 124,50$ (em dólares de 1980). A pontuação de `IQ` não explica nem 10% da variação salarial.
 
 ### (iii) Agora, estime um modelo em que cada acréscimo de um ponto em `IQ` tenha o mesmo efeito percentual em `wage.` Se `IQ` aumentar 15 pontos, qual será o aumento percentual previsto aproximado em `wage`?
 
+```{r}
+model <- lm(lwage ~ IQ, data = wage2) # estimando modelo
+summary(model)
+```
 
+$$
+\begin{matrix}
+  \widehat{log(salary)} = 5,89 + 0,008 (IQ) \\
+  n = 935, \qquad R^2 = 0,09
+\end{matrix}
+$$
 
-
-
+Se variar em 15 então $\Delta log(salário) = 0,0088(15) = 0,132$, que é a mudança proporcional (aproximada) no salário previsto. O aumento percentual é, portanto, de aproximadamente 13,2.
 
 
 
