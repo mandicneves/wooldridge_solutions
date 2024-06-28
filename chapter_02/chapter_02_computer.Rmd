@@ -174,6 +174,61 @@ $$
 
 Se variar em 15 então $\Delta log(salário) = 0,0088(15) = 0,132$, que é a mudança proporcional (aproximada) no salário previsto. O aumento percentual é, portanto, de aproximadamente 13,2.
 
+## C5 Para a população de empresas do setor químico, defina `rd` como os gastos anuais em pesquisa e desenvolvimento, e `sales` como as vendas anuais (ambos em milhões de dólares). 
+
+### (i) Escreva um modelo (não uma equação estimada) que implique uma elasticidade constante entre `rd` e `sales`. Qual é o parâmetro da elasticidade?
+
+$$
+\begin{matrix}
+  log(rd) = \beta_0 + \beta_1 (sales) + \mu
+\end{matrix}
+$$
+- $\beta_1$ é a elasticidade de `rd` em relação a `sales`
+
+### (ii) Agora, estime o modelo usando os dados do arquivo `RDCHEM.` Monte a equação estimada da forma usual. Qual é a elasticidade estimada de `rd` em relação a `sales`? Explique o que essa elasticidade significa.
+
+```{r}
+library(wooldridge)
+data("rdchem")
+```
+
+```{r}
+model <- lm(lrd ~ lsales, data = rdchem) # estimando modelo
+summary(model)
+```
+A elasticidade estimada de `rd` em relação à `sales` é de 1,076. Estima-se que um aumento de um por cento nas vendas aumente os gastos em pesquisa e desenvolvimento em cerca de 1,08%. 
+
+## C6
+
+## C7
+
+## C8
+
+## C9
+
+## C10
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
