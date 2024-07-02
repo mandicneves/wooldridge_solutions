@@ -303,15 +303,157 @@ O coeficiente de inclinação indica que cada envio por ano está associado a ce
 
 Como o menor ano de correspondência na amostra é `r min(charity$mailsyear)`, o menor valor previsto de presentes é $2,01 + 2,65 (0,25) \approx 2,67$. Mesmo se olharmos para a população em geral, onde algumas pessoas não receberam qualquer correspondência, o menor valor previsto é cerca de dois. Portanto, com esta equação estimada, nunca prevemos zero doações de caridade.
 
-## C8
+## C8 Para completar este exercício, você precisará de um programa que lhe permita gerar dados das distribuições uniforme e normal.
 
-## C9
+### (i) Comece gerando 500 observações em $x_i$ – a variável explicativa – a partir da distribuição uniforme com variação [0,10]. (A maioria dos programas estatísticos tem um comando para distribuição Uniforme(0,1); só multiplique essas observações por 10.) Qual é a média da amostra e o desvio padrão da amostra de $x_i$?
 
-## C10
+```{r}
+x <- runif(500, min = 0, max = 10)
+mean(x) # media
+sd(x) # desvio padrão
+```
+
+### (ii) Gere, de forma aleatória, 500 erros, $u_i$, a partir da distribuição Normal(0,36). Se você gerar uma Normal(0,1), como geralmente está disponível, simplesmente multiplique os resultados por seis.) A média amostral de $u_i$ é exatamente zero? Por que sim ou por que não? Qual é o desvio padrão amostral de $u_i$?
+
+```{r}
+u <- rnorm(500, mean = 0, sd = 6)
+mean(u) # media
+sd(u) # desvio padrão
+```
+
+A média amostral não é exatamente zero. Isso ocorre porque uma distribuição normal possui um distribuição de probabilidades que contenha 95% dos valores dentro de um intervalo de 2 desvios-padrões da média. Portanto, dificilmente os valores serão exatamente iguais a zero.
+
+### (iii) Agora gere $y_i$ como a equação abaixo, isto é, o intercepto da população é um e a inclinação populacional é dois. Use os dados para executar a regressão de $y_i$ em $x_i$. Quais são suas estimativas de intercepto e inclinação? Elas são iguais aos valores populacionais da equação abaixo? Explique.
+
+$$
+y_i = 1 + 2x_i + \mu_i \equiv \beta_0 + \beta_1 x_1 + \mu_i
+$$
+
+```{r}
+y <- 1 + 2*x + u
+model <- lm(y ~ x)
+model
+```
 
 
+### (iv) Obtenha os resíduos MQO, $\hat{u}_i$, e verifique se a equação (2.60) se mantém (sujeita a erros de arredondamento).
+
+```{r}
+sum(model$residuals)
+sum(model$residuals * x)
+```
 
 
+### (v) Calcule as mesmas quantidades da equação (2.60), mas use os erros $u_i$ no lugar dos resíduos. Agora, o que você conclui?
+
+### (vi) Repita os itens (i), (ii) e (iii) com uma nova amostra de dados, começando com a geração de $x_i$. Agora, o que você obtém de $\hat{\beta}_0$ e $\hat{\beta}_1$? Por que isto é diferente do que você obteve no item (iii)?
+
+## C9 Use os dados do arquivo `COUNTYMURDERS` para responder a essas questões. Utilize somente os dados de 1996.
+
+```{r}
+library(wooldridge)
+data("countymurders")
+dados <- subset(countymurders, year == 1996)
+```
+
+### (i) Quantos condados tiveram zero assassinatos em 1996? Quantos condados tiveram pelo menos uma execução? Qual é o maior número de execuções?
+
+```{r}
+sum(dados$arrests == 0, na.rm = T) # condados com zero assassinatos em 1996
+sum(dados$execs > 1, na.rm = T) # condados com pelo menos uma execução em 1996
+```
+
+
+### (ii) Estime a equação abaixo, em que murders corresponde ao número de assassinatos, por MQO e relate os resultados da forma usual, incluindo o tamanho da amostra e o R-quadrado.
+
+$$ murders = \beta_0 + \beta_1 execs + \mu $$
+```{r}
+model <- lm(murders ~ execs, data = dados) # estimando o modelo
+summary(model)
+```
+
+$$
+\begin{matrix}
+  \widehat {murders} = 5,45 + 58,55 (execs) \\
+  n = 2197, \qquad R^2 = 0,04389
+\end{matrix}
+$$
+
+### (iii) Interprete o coeficiente de inclinação registrado no item (ii). A equação estimada sugere um efeito dissuasor da pena capital?
+
+O coeficiente de inclinação indica que para o aumento de um `execs` estima-se um aumento em 58 assassinatos (`murders`). Portanto, a pena capital não possui um efeito dissuasor.
+
+### (iv) Qual é o menor número de assassinatos que pode ser previsto pela equação? Qual é o resíduo de um condado com zero execuções e zero assassinatos?
+
+O menor número de assassinatos que pode ser previsto pelo modelo é `r round(model$coefficients[1], 2)`. Este valor é também o erro para os casos em que não existem assassinatos nem pena capitais.
+
+### (v) Explique por que uma análise de regressão simples não é adequada para determinar se a pena capital tem um efeito dissuasor sobre os assassinatos.
+
+Uma análise de regressão simples pode não ser adequada para determinar se a pena capital tem um efeito dissuasor sobre os assassinatos por várias razões:
+
+1. **Fatores Confusos (Confounding Variables):**Existem muitos fatores que podem influenciar as taxas de homicídio além da presença da pena capital. Fatores como:
+
+- Nível de policiamento e eficácia das forças policiais
+- Condições socioeconômicas (desemprego, pobreza, educação)
+- Políticas públicas e programas de prevenção ao crime
+- Presença de drogas e gangues
+- Se esses fatores não forem controlados na análise, a regressão simples pode fornecer uma relação - espúria entre a pena capital e as taxas de homicídio.
+
+2. **Causalidade vs. Correlação:**Uma regressão simples pode mostrar uma correlação entre a pena capital e as taxas de homicídio, mas isso não implica causalidade. A relação observada pode ser influenciada por outros fatores ou pode ser puramente coincidental.
+
+3. **Viés de Seleção:**As jurisdições que adotam a pena capital podem ser diferentes das que não adotam em aspectos fundamentais que também afetam as taxas de homicídio. Por exemplo, estados com taxas de homicídio mais altas podem ser mais propensos a adotar a pena capital, o que pode introduzir viés na análise.
+
+4. **Endogeneidade:**Há um problema de endogeneidade se a variável independente (pena capital) estiver correlacionada com o termo de erro na regressão. Isso pode ocorrer se, por exemplo, as taxas de homicídio elevadas levarem à adoção da pena capital, e não o contrário. Este problema torna as estimativas de regressão simples viesadas e inconsistentes.
+
+5. **Mudanças ao Longo do Tempo (Dinâmica Temporal):**As taxas de homicídio podem variar ao longo do tempo devido a uma série de fatores. Uma análise de regressão simples que não leve em conta essas variações temporais pode não capturar corretamente a relação entre pena capital e homicídios.
+
+6. **Heterogeneidade entre Jurisdições:** Os estados ou países podem diferir significativamente em termos de aplicação da pena capital, eficácia do sistema judicial, cultura e normas sociais. Uma análise de regressão simples que não leve em consideração essas heterogeneidades pode ser inadequada.
+
+## C10 O conjunto de dados do arquivo `CATHOLIC` inclui informações de pontuações de testes de mais de 7.000 estudantes dos Estados Unidos que cursaram a oitava série em 1988. As variáveis `mate12` e `leitu12` são notas padronizadas de matemática e leitura, respectivamente.
+
+```{r}
+library(wooldridge)
+data("catholic")
+```
+
+### (i) Quantos estudantes existem na amostra? Encontre as médias e desvios padrão de `mate12` e `leitu12`.
+
+```{r}
+nrow(catholic) # quantidade de estudantes na amostra
+sapply(catholic[,2:3], mean) # medias
+sapply(catholic[,2:3], sd) # desvios-padrão
+```
+
+### (ii) Compute a regressão simples de `mate12` sobre `leitu12` para obter o intercepto MQO e as estimativas de inclinação. Reporte os resultados na forma usual.
+
+```{r}
+model <- lm(math12 ~ read12, data = catholic) # estimando o modelo
+summary(model)
+```
+
+$$
+\begin{matrix}
+  \widehat {mate12} = 15,15 + 0,71 (leitu12) \\
+  n = 7430, \qquad R^2 = 0,5047
+\end{matrix}
+$$
+
+### (iii) O intercepto registrado na parte (ii) tem uma interpretação significativa? Explique.
+
+O intercepto significa neste caso, a nota esperada em matemática independentemente da nota de leitura.
+
+### (iv) Você está surpreso pelo $\beta_1$ encontrado? E quanto ao $R^2$? 
+
+Existe uma forte assosiação entre as notas de leitura e matemática. O modelo indica que, para um aumento na pontuação de leitura em uma unidade, espera-se um aumento de 0,7 na pontuação de matemática. Isso pode ser explicado pelo fato de que bons alunos, em geral, apresentam boas notas em diversas matérias, sendo o contrário também verdadeiro, maus alunos, apresentam notas ruins em várias matérias.
+
+### (v) Suponha que você apresente suas descobertas ao superintendente distrital de educação e ele diga: “Suas descobertas mostram que, para aumentar as notas de matemática, precisamos somente melhorar as notas de leitura; portanto, devemos contratar mais professores de leitura”. Como você responderia a este comentário? (Dica: Se você calculasse a regressão de `leitu12` sobre `mate12`, ao invés do contrário, o que esperaria descobrir?)
+
+```{r}
+model <- lm(read12 ~ math12, data = catholic)
+summary(model)
+```
+
+Esse raciocínio não está correto, pelos fatores apontados na resposta anterior.
 
 
 
