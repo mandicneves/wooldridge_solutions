@@ -1,5 +1,6 @@
 ---
 output: pdf_document
+
 ---
 
 # Exercícios em computador
@@ -198,9 +199,109 @@ summary(model)
 ```
 A elasticidade estimada de `rd` em relação à `sales` é de 1,076. Estima-se que um aumento de um por cento nas vendas aumente os gastos em pesquisa e desenvolvimento em cerca de 1,08%. 
 
-## C6
+## C6 Usamos os dados do arquivo `MEAP93` no Exemplo 2.12. Agora, queremos explorar a relação entre a taxa de aprovação em matemática (`math10`) e os gastos por estudante (`expend`).
 
-## C7
+```{r}
+library(wooldridge)
+data("meap93")
+```
+
+### (i) Você acha que cada dólar adicional gasto tem o mesmo efeito sobre a taxa de aprovação ou um efeito decrescente seria mais razoável? Explique.
+
+A taxa de aprovação deve crescer a taxas decrescentes, ou seja, quanto maior a taxa de aprovação, maior será o gasto necessário para aumentar a taxa de aprovação na mesma unidade.
+
+### (ii) No modelo populacional, argumente que $\beta_1/10$ é a porcentagem de alteração em `math10` dado um aumento de 10% em gasto.
+
+$$
+math10 = \beta_0 + \beta_1 log(expend) + \mu
+$$
+
+*Ceteris paribus*, a variação de `math10` é dada por
+
+$$
+\begin{matrix}
+  \Delta math10 = \beta_1 \Delta log(expend) \\
+  \Delta math10 \approx \frac{\beta_1}{100} (\% \Delta expend) \\
+\end{matrix}
+$$
+Portanto, para uma variação de 10% em gasto, $\% \Delta expend = 10$
+
+$$
+\Delta math10 \approx \frac{\beta_1}{100} \times 10 \approx \frac{\beta_1}{10}
+$$
+
+### (iii) Use os dados do arquivo `MEAP93` para estimar o modelo (ii). Descreva a equação estimada da forma usual, incluindo o tamanho da amostra e o R-quadrado.
+
+```{r}
+model <- lm(math10 ~ lexpend, data = meap93) # estimando modelo
+summary(model)
+```
+
+$$
+\begin{matrix}
+  \widehat{math10} = -69,341 + 11,164 \ log(expend) \\
+  n = 608, \qquad R^2 = 0,02966
+\end{matrix}
+$$
+
+### (iv) Quão grande é o efeito de gastos estimado? Em outras palavras, se os gastos aumentarem 10%, qual será o aumento percentual estimado em `math10`?
+
+Se aumentarmos os gastos em 10%, `math10` aumentará em 1,1% aproximadamente. Este efeito é maior quando consideramos escolas com um gasto baixo.
+
+### (v) Alguns podem se preocupar com o fato de que a análise de regressão pode produzir valores ajustados para `math10` maiores do que 100. Por que isso não é tão preocupante neste conjunto de dados?
+
+```{r}
+subset(meap93, math10 > 100) # quantiade de observações maiores do que 100
+max(meap93$math10) # valor máximo de math10 na base de dados
+max(model$fitted.values) # valor máximo de math ajustado no modelo
+```
+Isso é preocupante pois não existem observações no conjunto de dados com valores para `math10` maiores do que 100.
+
+## C7 Use os dados do arquivo `CHARITY` [retirado de Franses e Paap (2001)] para responder às seguintes questões:
+
+```{r}
+library(wooldridge)
+data("charity")
+```
+
+### (i) Qual é a doação (`gift`) média da amostra de 4.268 pessoas (em florins holandeses)? Qual é a porcentagem de pessoas com nenhuma doação?
+
+```{r}
+mean(charity$gift) # doação média
+mean(charity$gift == 0) # porcentagem de pessoas com nenhuma doação
+```
+
+### (ii) Qual é a média de envios por ano? Quais são os valores mínimos e máximos?
+
+```{r}
+mean(charity$mailsyear) # media de envios por ano
+min(charity$mailsyear) # valor mínimo
+max(charity$mailsyear) # valor máximo
+```
+
+
+### (iii) Estime o modelo por MQO e registre os resultados da forma usual, incluindo o tamanho da amostra e o R-quadrado.
+
+$$ gift = \beta_0 + \beta_1 mailsyear + \mu $$
+```{r}
+model <- lm(gift ~ mailsyear, data = charity) # estimando modelo
+summary(model)
+```
+
+$$
+\begin{matrix}
+  \widehat {gift} = 2,0141 + 2,6495 (mailsyear) \\
+  n = 4268, \qquad R^2 = 0,01379
+\end{matrix}
+$$
+
+### (iv) Interprete o coeficiente de inclinação. Se cada envio custa um florim, a instituição de caridade espera obter um lucro líquido em cada um dos envios? Isso quer dizer que a instituição obtém um lucro líquido em todos os envios? Explique.
+
+O coeficiente de inclinação indica que cada envio por ano está associado a cerca de 2,65 florins adicionais, em média. Portanto, se cada envio custa um florim, o lucro esperado de cada envio é estimado em 1,65 florins. Esta é apenas a média, no entanto. Algumas correspondências não geram contribuições ou geram uma contribuição inferior ao custo da correspondência, outras correspondências geraram muito mais do que o custo da correspondência.
+
+### (v) Qual é a menor contribuição à instituição prevista na amostra? Usando essa análise de regressão simples, você pode prever zero de `gift`?
+
+Como o menor ano de correspondência na amostra é `r min(charity$mailsyear)`, o menor valor previsto de presentes é $2,01 + 2,65 (0,25) \approx 2,67$. Mesmo se olharmos para a população em geral, onde algumas pessoas não receberam qualquer correspondência, o menor valor previsto é cerca de dois. Portanto, com esta equação estimada, nunca prevemos zero doações de caridade.
 
 ## C8
 
